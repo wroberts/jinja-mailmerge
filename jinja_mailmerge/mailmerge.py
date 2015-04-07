@@ -66,7 +66,7 @@ def subn(sval, subdict):
         sval = sval.replace(before, after)
     return sval
 
-@cli.command()
+@click.command()
 @click.argument('table', type=click.Path(exists=True, dir_okay=False))
 @click.argument('template', type=click.Path(exists=True, dir_okay=False))
 def main(table, template):
