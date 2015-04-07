@@ -104,7 +104,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'jinja-mailmerge=jinja-mailmerge.mailmerge:main',
+            'jinja-mailmerge=jinja_mailmerge.mailmerge:main',
         ],
     },
 )
