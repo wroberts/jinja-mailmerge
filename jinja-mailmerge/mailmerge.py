@@ -9,9 +9,14 @@ A Python script to generate multiple files using a template and a
 spreadsheet (in Emacs org-mode format) of variable settings.
 '''
 
+import click
 import jinja2
 import re
 import sys
+try:
+    import pandas
+except ImportError:
+    pass
 
 def load_org_table(org_filename):
     '''
