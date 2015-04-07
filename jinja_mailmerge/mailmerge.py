@@ -66,14 +66,21 @@ def subn(sval, subdict):
         sval = sval.replace(before, after)
     return sval
 
-def main():
+@cli.command()
+@click.argument('table', type=click.Path(exists=True, dir_okay=False))
+@click.argument('template', type=click.Path(exists=True, dir_okay=False))
+def main(table, template):
     '''
     Main function.
     '''
-    env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
-    template = env.get_template('template.org')
+    table_filename = click.format_filename(table)
+    template_filename = click.format_filename(template)
 
-    instances = load_org_table('table.org')
+    env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
+    template = env.get_template(template_filename)
+
+    #if table_filename.lower().endswith('.org'):
+    instances = load_org_table(table_filename)
 
     for instance in instances:
         output_filename = '{}.org'.format(subn(instance['name'], GERMAN_SUBS))
