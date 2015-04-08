@@ -15,7 +15,9 @@ Todo
 
 2. Documentation
 
-3. Support more spreadsheet formats:
+3. Unit tests
+
+4. Support more spreadsheet formats:
 
    - CSV, TSV
    - Excel
@@ -23,7 +25,7 @@ Todo
    - YAML
    - JSON
 
-4. Maybe allow arbitary text processing on the output filename?
+5. Maybe allow arbitary text processing on the output filename?
    Currently, the output filename is passed through a filter (`subn`
    with `GERMAN_SUBS`, which could be called `ascii_de` or
    something).  It should be possible to specify a transform as a
