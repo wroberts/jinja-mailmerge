@@ -29,6 +29,6 @@ Todo
 
 5. Maybe allow arbitary text processing on the output filename?
    Currently, the output filename is passed through a filter (``subn``
-   with ``GERMAN_SUBS``, which could be called ``ascii_de`` or
+   with ``GERMAN_SUBS``, which could be called ``de2ascii`` or
    something).  It should be possible to specify a transform as a
    command line option, using Jinja template syntax.
