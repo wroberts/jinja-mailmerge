@@ -48,6 +48,10 @@ def load_org_table(org_filename):
     '''
     with open(org_filename) as input_file:
         lines = input_file.read().decode('utf-8').strip().split('\n')
+    # filter to org-mode table lines
+    lines = list(firstrun(lambda x: re.match(r'^\s*\|', x), lines))
+    # strip whitespace
+    lines = [line.strip() for line in lines]
     # filter out org-mode HLINE lines
     lines = [line for line in lines if not re.match(r'^\|[+-]*\|$', line)]
     # filter out lines that don't match the number of columns of the
