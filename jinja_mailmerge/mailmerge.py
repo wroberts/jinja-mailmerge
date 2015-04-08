@@ -14,6 +14,11 @@ import itertools
 import jinja2
 import re
 import sys
+# ordered dict
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
 # pandas
 try:
     import pandas
