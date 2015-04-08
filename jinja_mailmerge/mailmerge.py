@@ -10,6 +10,7 @@ spreadsheet (in Emacs org-mode format) of variable settings.
 '''
 
 import click
+import itertools
 import jinja2
 import re
 import sys
@@ -17,6 +18,21 @@ try:
     import pandas
 except ImportError:
     pass
+
+def firstrun(pred, seq):
+    '''
+    Make an iterator that returns elements from the iterable as long
+    as the predicate is true, and then stops; it ignores elements at
+    the beginning of the sequence for which predicate is False.
+
+    Arguments:
+    - `pred`:
+    - `seq`:
+    '''
+    for x in itertools.takewhile(lambda x: not pred(x), seq):
+        pass
+    for x in itertools.takewhile(pred, seq):
+        yield x
 
 def load_org_table(org_filename):
     '''
