@@ -69,7 +69,7 @@ def load_org_table(org_filename):
              for line in lines]
     # construct dictionaries from each table body line
     header = lines[0]
-    return [zip(header, line) for line in lines[1:]]
+    return [OrderedDict(zip(header, line)) for line in lines[1:]]
 
 GERMAN_SUBS = {u'Ä': u'Ae',
                u'Ö': u'Oe',
@@ -109,13 +109,19 @@ def main(table, template):
     instances = load_org_table(table_filename)
 
     output_extension = 'org'
+    output_basename_field = 0
+
+    if isinstance(output_basename_field, int):
+        output_basename_field_fn = lambda x: x.values()[output_basename_field]
+    else:
+        output_basename_field_fn = lambda x: x[output_basename_field]
 
     for instance in instances:
-        output_basename = instance[0][1]
+        output_basename = output_basename_field_fn(instance)
         output_basename = subn(output_basename, GERMAN_SUBS)
         output_filename = '{0}.{1}'.format(output_basename, output_extension)
         with open(output_filename, 'w') as output_file:
-            output_file.write(template.render(dict(instance)).encode('utf-8'))
+            output_file.write(template.render(instance).encode('utf-8'))
 
 if __name__ == '__main__' and sys.argv != ['']:
     main()
