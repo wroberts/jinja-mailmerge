@@ -95,12 +95,15 @@ def subn(sval, subdict):
 @click.command()
 @click.argument('table', type=click.Path(exists=True, dir_okay=False))
 @click.argument('template', type=click.Path(exists=True, dir_okay=False))
-def main(table, template):
+@click.option('--filename-field', '-f', type=click.STRING, default='0')
+def main(table, template, filename_field):
     '''
     Main function.
     '''
     table_filename = click.format_filename(table)
     template_filename = click.format_filename(template)
+    if filename_field.isdigit():
+        filename_field = int(filename_field)
 
     env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
     template = env.get_template(template_filename)
@@ -109,15 +112,14 @@ def main(table, template):
     instances = load_org_table(table_filename)
 
     output_extension = 'org'
-    output_basename_field = 0
 
-    if isinstance(output_basename_field, int):
-        output_basename_field_fn = lambda x: x.values()[output_basename_field]
+    if isinstance(filename_field, int):
+        filename_field_fn = lambda x: x.values()[filename_field]
     else:
-        output_basename_field_fn = lambda x: x[output_basename_field]
+        filename_field_fn = lambda x: x[filename_field]
 
     for instance in instances:
-        output_basename = output_basename_field_fn(instance)
+        output_basename = filename_field_fn(instance)
         output_basename = subn(output_basename, GERMAN_SUBS)
         output_filename = '{0}.{1}'.format(output_basename, output_extension)
         with open(output_filename, 'w') as output_file:
