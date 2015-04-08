@@ -102,8 +102,12 @@ def main(table, template):
     #if table_filename.lower().endswith('.org'):
     instances = load_org_table(table_filename)
 
+    output_extension = 'org'
+
     for instance in instances:
-        output_filename = '{}.org'.format(subn(instance['name'], GERMAN_SUBS))
+        output_basename = instance[0][1]
+        output_basename = subn(output_basename, GERMAN_SUBS)
+        output_filename = '{}.{}'.format(output_basename, output_extension)
         with open(output_filename, 'w') as output_file:
             output_file.write(template.render(dict(instance)).encode('utf-8'))
 
