@@ -14,6 +14,7 @@ import itertools
 import jinja2
 import re
 import sys
+# pandas
 try:
     import pandas
 except ImportError:
