@@ -108,7 +108,7 @@ def main(table, template):
     for instance in instances:
         output_basename = instance[0][1]
         output_basename = subn(output_basename, GERMAN_SUBS)
-        output_filename = '{}.{}'.format(output_basename, output_extension)
+        output_filename = '{0}.{1}'.format(output_basename, output_extension)
         with open(output_filename, 'w') as output_file:
             output_file.write(template.render(dict(instance)).encode('utf-8'))
 
