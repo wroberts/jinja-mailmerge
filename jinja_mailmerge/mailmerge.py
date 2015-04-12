@@ -92,6 +92,13 @@ def subn(sval, subdict):
         sval = sval.replace(before, after)
     return sval
 
+def filter_de2ascii(sval):
+    '''
+    Filter German accent characters out of unicode using Latin
+    character equivalents.
+    '''
+    return subn(sval, GERMAN_SUBS)
+
 @click.command()
 @click.argument('table', type=click.Path(exists=True, dir_okay=False))
 @click.argument('template', type=click.Path(exists=True, dir_okay=False))
@@ -121,7 +128,7 @@ def main(table, template, filename_field, extension):
 
     for instance in instances:
         output_basename = filename_field_fn(instance)
-        output_basename = subn(output_basename, GERMAN_SUBS)
+        output_basename = filter_de2ascii(output_basename)
         output_filename = '{0}.{1}'.format(output_basename, extension)
         with open(output_filename, 'w') as output_file:
             output_file.write(template.render(instance).encode('utf-8'))
