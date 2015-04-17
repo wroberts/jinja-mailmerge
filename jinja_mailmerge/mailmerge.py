@@ -24,6 +24,14 @@ try:
     import pandas
 except ImportError:
     pass
+# unidecode
+try:
+    from unidecode import unidecode
+except ImportError:
+    try:
+        from text_unidecode import unidecode
+    except ImportError:
+        pass
 
 def firstrun(pred, seq):
     '''
@@ -104,7 +112,9 @@ def filter_de2ascii(sval):
 @click.argument('template', type=click.Path(exists=True, dir_okay=False))
 @click.option('--filename-field', '-f', type=click.STRING, default='0')
 @click.option('--extension', '-e', type=click.STRING, default=None)
-def main(table, template, filename_field, extension):
+@click.option('--unidecode/--no-unidecode', default=False,
+              help='pass the filenames through unidecode to get straight ASCII')
+def main(table, template, filename_field, extension, use_unidecode):
     '''
     Main function.
     '''
@@ -128,7 +138,9 @@ def main(table, template, filename_field, extension):
 
     for instance in instances:
         output_basename = filename_field_fn(instance)
-        output_basename = filter_de2ascii(output_basename)
+        #output_basename = filter_de2ascii(output_basename)
+        if use_unidecode:
+            output_basename = unidecode(output_basename)
         output_filename = '{0}.{1}'.format(output_basename, extension)
         with open(output_filename, 'w') as output_file:
             output_file.write(template.render(instance).encode('utf-8'))
