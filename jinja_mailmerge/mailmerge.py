@@ -110,13 +110,21 @@ def filter_de2ascii(sval):
 @click.command()
 @click.argument('table', type=click.Path(exists=True, dir_okay=False))
 @click.argument('template', type=click.Path(exists=True, dir_okay=False))
-@click.option('--filename-field', '-f', type=click.STRING, default='0')
-@click.option('--extension', '-e', type=click.STRING, default=None)
+@click.option('--filename-field', '-f', type=click.STRING, default='0',
+              help='the name or 0-based index of the field in the table '
+              'which is used as the file name of the output')
+@click.option('--extension', '-e', type=click.STRING, default=None,
+              help='the file name extension used for files created '
+              '(defaults to the same extension as the template file)')
 @click.option('--unidecode/--no-unidecode', default=False,
               help='pass the filenames through unidecode to get straight ASCII')
 def main(table, template, filename_field, extension, use_unidecode):
     '''
-    Main function.
+    Generate a number of text files using a database table with fields
+    and values, and a template file.  Arguments:
+
+        TABLE     the spreadsheet table with data to fill in the template
+        TEMPLATE  a file containing the template, in jinja2 format
     '''
     table_filename = click.format_filename(table)
     template_filename = click.format_filename(template)
