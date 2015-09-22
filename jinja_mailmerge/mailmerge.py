@@ -116,9 +116,9 @@ def filter_de2ascii(sval):
 @click.option('--extension', '-e', type=click.STRING, default=None,
               help='the file name extension used for files created '
               '(defaults to the same extension as the template file)')
-@click.option('--unidecode/--no-unidecode', default=False,
+@click.option('--with-unidecode/--without-unidecode', default=False,
               help='pass the filenames through unidecode to get straight ASCII')
-def main(table, template, filename_field, extension, use_unidecode):
+def main(table, template, filename_field, extension, with_unidecode):
     '''
     Generate a number of text files using a database table with fields
     and values, and a template file.  Arguments:
@@ -147,7 +147,7 @@ def main(table, template, filename_field, extension, use_unidecode):
     for instance in instances:
         output_basename = filename_field_fn(instance)
         #output_basename = filter_de2ascii(output_basename)
-        if use_unidecode:
+        if with_unidecode:
             output_basename = unidecode(output_basename)
         output_filename = '{0}.{1}'.format(output_basename, extension)
         with open(output_filename, 'w') as output_file:
