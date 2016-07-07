@@ -112,4 +112,6 @@ setup(
             'jinja-mailmerge=jinja_mailmerge.mailmerge:main',
         ],
     },
+    test_suite='nose.collector',
+    tests_require=['nose'],
 )
