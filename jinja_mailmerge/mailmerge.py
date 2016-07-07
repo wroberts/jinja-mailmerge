@@ -50,6 +50,16 @@ def firstrun(pred, seq):
     for x in itertools.takewhile(pred, seq):
         yield x
 
+def org_table_line_p(line):
+    '''
+    Predicate function to indicate if a given line is part of an
+    org-mode table or not.
+
+    Arguments:
+    - `line`:
+    '''
+    return re.match(r'^\s*\|', line)
+
 def load_org_table(org_filename):
     '''
     Loads a table from file in Emacs org-mode format.  This function
@@ -71,7 +81,7 @@ def load_org_table(org_filename):
         # treat org_filename as an iterable
         lines = list(org_filename)
     # filter to org-mode table lines
-    lines = list(firstrun(lambda x: re.match(r'^\s*\|', x), lines))
+    lines = list(firstrun(org_table_line_p, lines))
     # strip whitespace
     lines = [line.strip() for line in lines]
     # filter out org-mode HLINE lines
