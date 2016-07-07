@@ -10,6 +10,7 @@ spreadsheet (in Emacs org-mode format) of variable settings.
 '''
 
 from __future__ import unicode_literals
+from jinja_mailmerge.compat import string_type
 import itertools
 import re
 import sys
@@ -59,10 +60,16 @@ def load_org_table(org_filename):
     values as values.
 
     Arguments:
-    - `org_filename`:
+    - `org_filename`: either a filename, or an iterable over lines of
+      a file to read
     '''
-    with open(org_filename) as input_file:
-        lines = input_file.read().decode('utf-8').strip().split('\n')
+    if isinstance(org_filename, string_type):
+        # treat org_filename as a path to open and read
+        with open(org_filename) as input_file:
+            lines = input_file.read().decode('utf-8').strip().split('\n')
+    else:
+        # treat org_filename as an iterable
+        lines = list(org_filename)
     # filter to org-mode table lines
     lines = list(firstrun(lambda x: re.match(r'^\s*\|', x), lines))
     # strip whitespace
