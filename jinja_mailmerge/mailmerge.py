@@ -45,10 +45,16 @@ def firstrun(pred, seq):
     - `pred`:
     - `seq`:
     '''
-    for x in itertools.takewhile(lambda x: not pred(x), seq):
-        pass
-    for x in itertools.takewhile(pred, seq):
-        yield x
+    burn_in = True
+    for x in seq:
+        if not pred(x):
+            if burn_in:
+                pass
+            else:
+                return
+        else:
+            burn_in = True
+            yield x
 
 def org_table_line_p(line):
     '''
