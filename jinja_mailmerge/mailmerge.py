@@ -9,11 +9,11 @@ A Python script to generate multiple files using a template and a
 spreadsheet (in Emacs org-mode format) of variable settings.
 '''
 
-import click
 import itertools
-import jinja2
 import re
 import sys
+import click
+import jinja2
 # ordered dict
 try:
     from collections import OrderedDict
