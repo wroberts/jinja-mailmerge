@@ -9,7 +9,7 @@ A Python script to generate multiple files using a template and a
 spreadsheet (in Emacs org-mode format) of variable settings.
 '''
 
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 from jinja_mailmerge.compat import string_type
 import itertools
 import re
