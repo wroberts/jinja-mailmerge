@@ -9,7 +9,7 @@ A Python script to generate multiple files using a template and a
 spreadsheet (in Emacs org-mode format) of variable settings.
 '''
 
-from __future__ import absolute_import, unicode_literals
+from __future__ import absolute_import
 from jinja_mailmerge.compat import string_type
 import itertools
 import re
@@ -103,13 +103,13 @@ def load_org_table(org_filename):
     header = lines[0]
     return [OrderedDict(zip(header, line)) for line in lines[1:]]
 
-GERMAN_SUBS = {'Ä': 'Ae',
-               'Ö': 'Oe',
-               'Ü': 'Ue',
-               'ß': 'ss',
-               'ä': 'ae',
-               'ö': 'oe',
-               'ü': 'ue'}
+GERMAN_SUBS = {u'Ä': u'Ae',
+               u'Ö': u'Oe',
+               u'Ü': u'Ue',
+               u'ß': u'ss',
+               u'ä': u'ae',
+               u'ö': u'oe',
+               u'ü': u'ue'}
 
 def subn(sval, subdict):
     '''
