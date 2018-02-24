@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 '''
@@ -9,23 +9,20 @@ A Python script to generate multiple files using a template and a
 spreadsheet (in Emacs org-mode format) of variable settings.
 '''
 
-from __future__ import absolute_import
-from jinja_mailmerge.compat import string_type
-import itertools
+
 import re
 import sys
+
 import click
 import jinja2
+
+from jinja_mailmerge.compat import string_type
+
 # ordered dict
 try:
     from collections import OrderedDict
 except ImportError:
     from ordereddict import OrderedDict
-# pandas
-try:
-    import pandas
-except ImportError:
-    pass
 # unidecode
 try:
     from unidecode import unidecode
@@ -34,6 +31,7 @@ except ImportError:
         from text_unidecode import unidecode
     except ImportError:
         pass
+
 
 def firstrun(pred, seq):
     '''
@@ -56,6 +54,7 @@ def firstrun(pred, seq):
             burn_in = True
             yield x
 
+
 def org_table_line_p(line):
     '''
     Predicate function to indicate if a given line is part of an
@@ -65,6 +64,7 @@ def org_table_line_p(line):
     - `line`:
     '''
     return re.match(r'^\s*\|', line)
+
 
 def load_org_table(org_filename):
     '''
@@ -82,7 +82,7 @@ def load_org_table(org_filename):
     if isinstance(org_filename, string_type):
         # treat org_filename as a path to open and read
         with open(org_filename) as input_file:
-            lines = input_file.read().decode('utf-8').strip().split('\n')
+            lines = input_file.read().strip().split('\n')
     else:
         # treat org_filename as an iterable
         lines = list(org_filename)
@@ -101,15 +101,17 @@ def load_org_table(org_filename):
              for line in lines]
     # construct dictionaries from each table body line
     header = lines[0]
-    return [OrderedDict(zip(header, line)) for line in lines[1:]]
+    return [OrderedDict(list(zip(header, line))) for line in lines[1:]]
 
-GERMAN_SUBS = {u'Ä': u'Ae',
-               u'Ö': u'Oe',
-               u'Ü': u'Ue',
-               u'ß': u'ss',
-               u'ä': u'ae',
-               u'ö': u'oe',
-               u'ü': u'ue'}
+
+GERMAN_SUBS = {'Ä': 'Ae',
+               'Ö': 'Oe',
+               'Ü': 'Ue',
+               'ß': 'ss',
+               'ä': 'ae',
+               'ö': 'oe',
+               'ü': 'ue'}
+
 
 def subn(sval, subdict):
     '''
@@ -120,9 +122,10 @@ def subn(sval, subdict):
     - `sval`:
     - `subdict`:
     '''
-    for (before, after) in subdict.iteritems():
+    for (before, after) in subdict.items():
         sval = sval.replace(before, after)
     return sval
+
 
 def filter_de2ascii(sval):
     '''
@@ -130,6 +133,7 @@ def filter_de2ascii(sval):
     character equivalents.
     '''
     return subn(sval, GERMAN_SUBS)
+
 
 @click.command()
 @click.argument('table', type=click.Path(exists=True, dir_okay=False))
@@ -141,7 +145,8 @@ def filter_de2ascii(sval):
               help='the file name extension used for files created '
               '(defaults to the same extension as the template file)')
 @click.option('--with-unidecode/--without-unidecode', default=False,
-              help='pass the filenames through unidecode to get straight ASCII')
+              help='pass the filenames through unidecode '
+              'to get straight ASCII')
 def main(table, template, filename_field, extension, with_unidecode):
     '''
     Generate a number of text files using a database table with fields
@@ -160,22 +165,23 @@ def main(table, template, filename_field, extension, with_unidecode):
     env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
     template = env.get_template(template_filename)
 
-    #if table_filename.lower().endswith('.org'):
+    # if table_filename.lower().endswith('.org'):
     instances = load_org_table(table_filename)
 
     if isinstance(filename_field, int):
-        filename_field_fn = lambda x: x.values()[filename_field]
+        filename_field_fn = lambda x: list(x.values())[filename_field]
     else:
         filename_field_fn = lambda x: x[filename_field]
 
     for instance in instances:
         output_basename = filename_field_fn(instance)
-        #output_basename = filter_de2ascii(output_basename)
+        # output_basename = filter_de2ascii(output_basename)
         if with_unidecode:
             output_basename = unidecode(output_basename)
         output_filename = '{0}.{1}'.format(output_basename, extension)
         with open(output_filename, 'w') as output_file:
-            output_file.write(template.render(instance).encode('utf-8'))
+            output_file.write(template.render(instance))
+
 
 if __name__ == '__main__' and sys.argv != ['']:
     main()
