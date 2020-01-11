@@ -9,7 +9,7 @@ A Python script to generate multiple files using a template and a
 spreadsheet (in Emacs org-mode format) of variable settings.
 '''
 
-
+from pathlib import Path
 import re
 import sys
 
@@ -134,6 +134,11 @@ def filter_de2ascii(sval):
     '''
     return subn(sval, GERMAN_SUBS)
 
+def list_directory_function(dirname):
+    '''
+    Return a list of files in a named directory.
+    '''
+    return list(Path(dirname).glob("*"))
 
 @click.command()
 @click.argument('table', type=click.Path(exists=True, dir_okay=False))
@@ -163,6 +168,7 @@ def main(table, template, filename_field, extension, with_unidecode):
         extension = template_filename.split('.')[-1]
 
     env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
+    env.globals['list_directory'] = list_directory_function
     template = env.get_template(template_filename)
 
     # if table_filename.lower().endswith('.org'):
