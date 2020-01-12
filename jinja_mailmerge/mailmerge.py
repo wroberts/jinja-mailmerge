@@ -10,6 +10,7 @@ spreadsheet (in Emacs org-mode format) of variable settings.
 '''
 
 from pathlib import Path
+import datetime
 import re
 import sys
 
@@ -169,6 +170,8 @@ def main(table, template, filename_field, extension, with_unidecode):
 
     env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
     env.globals['list_directory'] = list_directory_function
+    # https://stackoverflow.com/a/47289825/1062499
+    env.globals['utcnow'] = datetime.datetime.utcnow
     template = env.get_template(template_filename)
 
     # if table_filename.lower().endswith('.org'):
